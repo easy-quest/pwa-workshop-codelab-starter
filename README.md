@@ -23,3 +23,6 @@ PWA Edit - это приложение приложения, которое вы
 - `images/*` - Изображения, связанные с приложением
 - `package.json` а также `package-lock.json` - Node Файлы зависимости
 - `wmr.config.mjs` - Конфигурация файла для [WMR](https://www.npmjs.com/package/wmr), Инструмент сборки света используется для этого проекта.
+
+
+[ssss](https://developers.google.com/codelabs/pwa-training/pwa03--going-offline?hl=ru#1)
