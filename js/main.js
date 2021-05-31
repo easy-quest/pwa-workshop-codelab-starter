@@ -15,16 +15,16 @@
  */
 
 window.addEventListener('DOMContentLoaded', async () => {
-  // Set up the editor
+  // настройтеРедактор
   const { Editor } = await import('./app/editor.js');
   const editor = new Editor(document.body);
 
-  // Set up the menu
+  // Настройте меню
   const { Menu } = await import('./app/menu.js');
   new Menu(document.querySelector('.actions'), editor);
 
-  // Set the initial state in the editor
-  const defaultText = `# Welcome to PWA Edit!\n\nTo leave the editing area, press the \`esc\` key, then \`tab\` or \`shift+tab\`.`;
+  // Установите начальное состояние в редакторе
+  const defaultText = `# Добро пожаловать в PWA Edit!\n\nTo leave the editing area, press the \`esc\` key, then \`tab\` or \`shift+tab\`.`;
 
   editor.setContent(defaultText);
 });
