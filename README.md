@@ -26,3 +26,7 @@ PWA Edit - это приложение приложения, которое вы
 
 
 [ssss](https://developers.google.com/codelabs/pwa-training/pwa03--going-offline?hl=ru#1)
+<<<<<<< HEAD
+=======
+[ffffg](https://workshops.page.link/pwa03--workbox)
+>>>>>>> baed5d8d323c854dc6c19999d9e9fd6c4621214c
