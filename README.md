@@ -1,25 +1,25 @@
 # PWA Edit
 
-PWA Edit is the sample app that you'll build as you complete the [PWA Workshop](https://workshops.page.link/pwa-workshop).
+PWA Edit - это приложение приложения, которое вы построете, как вы завершили [PWA Workshop](https://workshops.page.link/pwa-workshop).
 
-## Files
+## Файлы
 
-There are two kinds of files in this codebase: application files and source files. Application files are files you will not touch during the course of the workshop; they exist to provide a full functional experience. Source files are files you'll be touching throughout the course of the workshop.
+В этой кодовой базе имеется два вида файлов: файлы приложений и исходные файлы.Файлы приложений являются файлами, которые вы не будете касаться в ходе семинара;Они существуют, чтобы обеспечить полный функциональный опыт.Исходные файлы - это файлы, которые вы будете касаться по всему курсу семинара.
 
-### Source files
+### Исходные файлы
 
-- `js/main.js` - Main application JavaScript
-- `service-worker.js` - Service worker file, first use during the Going Offline codelab
-- `manifest.json` - Web App Manifest file, first used during the From Tab to Taskbar codelab
-- `js/lib/install.js` - Provides a base class for the install button, used during the Install Button codelab
-- `js/lib/actions.js` - Provides a base class for the menu, used during the Capable codelab
+- `js/main.js` - Основное приложение JavaScript
+- `service-worker.js` - Сервисный работник файл, первое использование во время оффлайн-файла
+- `manifest.json` - Файл манифеста веб-приложения, впервые используется во время вкладки с вкладкой в Codelab панели задач
+- `js/lib/install.js` - Предоставляет базовый класс для кнопки установки, используемый во время установки кнопки Codelab
+- `js/lib/actions.js` - Обеспечивает базовый класс для меню, используемого во время способенного коделаба
 
-### Application files
+### Файлы приложений
 
-- `index.html` - Main application HTML
-- `offline.html` - Offline fallback HTML
-- `preview/index.html` - Preview page HTML
-- `css/*` - Styling for the applcation
-- `images/*` - Images associated with the application
-- `package.json` and `package-lock.json` - Node dependency files
-- `wmr.config.mjs` - Config file for [WMR](https://www.npmjs.com/package/wmr), the light-weight build tool being used for this project.
+- `index.html` - Основное применение HTML
+- `offline.html` - Оффлайн заправки HTML
+- `preview/index.html` - Preview Page HTML.
+- `css/*` - Стиль для приложения
+- `images/*` - Изображения, связанные с приложением
+- `package.json` а также `package-lock.json` - Node Файлы зависимости
+- `wmr.config.mjs` - Конфигурация файла для [WMR](https://www.npmjs.com/package/wmr), Инструмент сборки света используется для этого проекта.
