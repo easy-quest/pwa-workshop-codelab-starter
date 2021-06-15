@@ -1,43 +1,90 @@
-import { offlineFallback, warmStrategyCache } from 'workbox-recipes';
-import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies';
-import { registerRoute } from 'workbox-routing';
-import { CacheableResponsePlugin } from 'workbox-cacheable-response';
-import { ExpirationPlugin } from 'workbox-expiration';
+/*
+Copyright 2021 Google LLC
 
-// Set up page cache
-const pageCache = new CacheFirst({
-  cacheName: 'page-cache',
-  plugins: [
-    new CacheableResponsePlugin({
-      statuses: [0, 200],
-    }),
-    new ExpirationPlugin({
-      maxAgeSeconds: 30 * 24 * 60 * 60,
-    }),
-  ],
-});
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
 
-warmStrategyCache({
-  urls: ['/index.html', '/'],
-  strategy: pageCache,
-});
+      http://www.apache.org/licenses/LICENSE-2.0
 
-registerRoute(({ request }) => request.mode === 'navigate', pageCache);
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 
-// Set up asset cache
-registerRoute(
-  ({ request }) => ['style', 'script', 'worker'].includes(request.destination),
-  new StaleWhileRevalidate({
-    cacheName: 'asset-cache',
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [0, 200],
-      }),
-    ],
-  }),
-);
-
-// Set up offline fallback
-offlineFallback({
-  pageFallback: '/offline.html',
-});
+ import { offlineFallback, warmStrategyCache } from 'workbox-recipes';
+ import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies';
+ import { registerRoute } from 'workbox-routing';
+ import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+ import { strategy as streamsStrategy } from 'workbox-streams';
+ import { ExpirationPlugin } from 'workbox-expiration';
+ import { openDB } from 'idb';
+ import marked from 'marked';
+ 
+ // Set up page cache
+ const pageCache = new CacheFirst({
+   cacheName: 'page-cache',
+   plugins: [
+     new CacheableResponsePlugin({
+       statuses: [0, 200],
+     }),
+     new ExpirationPlugin({
+       maxAgeSeconds: 30 * 24 * 60 * 60,
+     }),
+   ],
+ });
+ 
+ warmStrategyCache({
+   urls: ['/index.html', '/'],
+   strategy: pageCache,
+ });
+ 
+ // Streaming preview
+ registerRoute(
+   ({ url }) => url.pathname === '/preview',
+   streamsStrategy([
+     () => `<!DOCTYPE html>
+   <html lang="en">
+     <head>
+       <meta charset="UTF-8" />
+       <link rel="icon" type="image/svg+xml" href="/images/logo.svg" />
+       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+       <title>PWA Edit | Markdown Preview</title>
+       <link rel="stylesheet" href="/css/preview.css" />
+       <script type="module" src="/js/preview.js"></script>
+     </head>
+     <body>
+       <main class="preview">`,
+     async () => {
+       const db = await openDB('settings-store');
+       const content = (await db.get('settings', 'content')) || '';
+       return marked(content);
+     },
+     () => `</main>
+   </body>
+ </html>`,
+   ]),
+ );
+ 
+ // Regular navigation routing
+ registerRoute(({ request }) => request.mode === 'navigate', pageCache);
+ 
+ // Set up asset cache
+ registerRoute(
+   ({ request }) => ['style', 'script', 'worker'].includes(request.destination),
+   new StaleWhileRevalidate({
+     cacheName: 'asset-cache',
+     plugins: [
+       new CacheableResponsePlugin({
+         statuses: [0, 200],
+       }),
+     ],
+   }),
+ );
+ 
+ // Set up offline fallback
+ offlineFallback({
+   pageFallback: '/offline.html',
+ });
