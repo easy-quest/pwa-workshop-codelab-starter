@@ -29,7 +29,22 @@ window.addEventListener('DOMContentLoaded', async () => {
   new Menu(document.querySelector('.actions'), editor);
 
   // Установите начальное состояние в редакторе
-  const defaultText = `# Добро пожаловать в PWA Edit!\n\nЧтобы покинуть область редактирования, нажмите \`esc\` , тогда \`tab\` или же \`shift+tab\`.`;
+  // const defaultText = `# Добро пожаловать в PWA Edit!\n\nЧтобы покинуть область редактирования, нажмите \`esc\` , тогда \`tab\` или же \`shift+tab\`.`;
+  editor.setContent((await db.get('settings', 'content')) || defaultText);
 
   editor.setContent(defaultText);
 });
+// Save content to database on edit
+editor.onUpdate(async (content) => {
+  await db.put('settings', content, 'content');
+});
+// Set up night mode toggle
+const { NightMode } = await import('./app/night-mode.js');
+new NightMode(
+  document.querySelector('#mode'),
+  async (mode) => {
+    editor.setTheme(mode);
+    // Save the night mode setting when changed
+  },
+  // Retrieve the night mode setting on initialization
+);
