@@ -1,27 +1,43 @@
-// Выберите имя кэша
-const cacheName = 'cache-v1';
-// Перечислите файлы для предопределенности
-const precacheResources = ['/', '/index.html', '/css/style.css', '/js/main.js', '/js/app/editor.js', '/js/lib/actions.js'];
+import { offlineFallback, warmStrategyCache } from 'workbox-recipes';
+import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies';
+import { registerRoute } from 'workbox-routing';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+import { ExpirationPlugin } from 'workbox-expiration';
 
-// Когда сервисный работник устанавливается, откройте кэш и добавьте ресурсы rockache к нему
-self.addEventListener('install', (event) => {
-     console.log('Service worker install event!');
-     event.waitUntil(caches.open(cacheName).then((cache) => cache.addAll(precacheResources)));
+// Set up page cache
+const pageCache = new CacheFirst({
+  cacheName: 'page-cache',
+  plugins: [
+    new CacheableResponsePlugin({
+      statuses: [0, 200],
+    }),
+    new ExpirationPlugin({
+      maxAgeSeconds: 30 * 24 * 60 * 60,
+    }),
+  ],
 });
 
-self.addEventListener('activate', (event) => {
-     console.log('Service worker activate event!');
+warmStrategyCache({
+  urls: ['/index.html', '/'],
+  strategy: pageCache,
 });
 
-// Когда есть запрашивающий запрос входящей извлечения, попробуйте ответить на предварительно продуманный ресурс, в противном случае отступай к сети
-self.addEventListener('fetch', (event) => {
-     console.log('Fetch intercepted for:', event.request.url);
-     event.respondWith(
-          caches.match(event.request).then((cachedResponse) => {
-               if (cachedResponse) {
-                    return cachedResponse;
-               }
-               return fetch(event.request);
-          }),
-     );
+registerRoute(({ request }) => request.mode === 'navigate', pageCache);
+
+// Set up asset cache
+registerRoute(
+  ({ request }) => ['style', 'script', 'worker'].includes(request.destination),
+  new StaleWhileRevalidate({
+    cacheName: 'asset-cache',
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+    ],
+  }),
+);
+
+// Set up offline fallback
+offlineFallback({
+  pageFallback: '/offline.html',
 });
