@@ -1,4 +1,11 @@
 import swURL from 'sw:../service-worker.js';
+import { openDB } from 'idb';
+// Set up the database
+const db = await openDB('settings-store', 1, {
+  upgrade(db) {
+    db.createObjectStore('settings');
+  },
+});
 // Зарегистрировать сервис
 if ('serviceWorker' in navigator) {
   // Дождитесь, пока событие «Load» не блокирует другую работу
