@@ -13,8 +13,9 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-import swPlugin from '@wmr-plugins/service-worker/sw-plugin.cjs';
+ import swPlugin from '@wmr-plugins/service-worker/sw-plugin.cjs';
 
-export default function (options) {
-  swPlugin(options);
-}
+ export default function (options) {
+   swPlugin(options);
+ }
+ 
