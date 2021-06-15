@@ -23,16 +23,19 @@ window.addEventListener('DOMContentLoaded', async () => {
   // настройтеРедактор
   const { Editor } = await import('./app/editor.js');
   const editor = new Editor(document.body);
+  // Set up install prompt
+  const { Install } = await import('./lib/install.js');
+  new Install(document.querySelector('#install'));
 
   // Настройте меню
   const { Menu } = await import('./app/menu.js');
   new Menu(document.querySelector('.actions'), editor);
 
   // Установите начальное состояние в редакторе
-  // const defaultText = `# Добро пожаловать в PWA Edit!\n\nЧтобы покинуть область редактирования, нажмите \`esc\` , тогда \`tab\` или же \`shift+tab\`.`;
-  editor.setContent((await db.get('settings', 'content')) || defaultText);
+  const defaultText = `# Добро пожаловать в PWA Edit!\n\nЧтобы покинуть область редактирования, нажмите \`esc\` , тогда \`tab\` или же \`shift+tab\`.`;
+  
 
-  editor.setContent(defaultText);
+  editor.setContent((await db.get('settings', 'content')) || defaultText);
 });
 // Save content to database on edit
 editor.onUpdate(async (content) => {
